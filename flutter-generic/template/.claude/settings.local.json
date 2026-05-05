@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(python -c \"import sys,json; d=json.load(sys.stdin); f=d.get('tool_input',{}).get('file_path',''); print(json.dumps({'systemMessage':'WARNING: Main Claude should not directly edit Dart/pubspec files. Use the developer agent instead.'})) if (f.endswith('.dart') or f.endswith('pubspec.yaml') or f.endswith('pubspec.lock')) else None\")",
+      "Bash(jq --version)",
+      "Bash(echo \"exit: $?\")"
+    ],
+    "additionalDirectories": [
+      "YOUR_ADDITIONAL_DIRECTORY_PATH"
+    ]
+  }
+}

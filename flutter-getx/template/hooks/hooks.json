@@ -1,0 +1,26 @@
+{
+  "hooks": [
+    {
+      "description": "Format Dart files after write/edit",
+      "type": "PostToolUse",
+      "matcher": "Write|Edit",
+      "command": "dart format . --line-length 100",
+      "enabled": true
+    },
+    {
+      "description": "Run flutter analyze after write/edit to catch issues early",
+      "type": "PostToolUse",
+      "matcher": "Write|Edit",
+      "command": "flutter analyze --no-fatal-infos",
+      "enabled": false,
+      "note": "Enable this for continuous analysis (can be slow on large projects)"
+    },
+    {
+      "description": "Run tests on session stop to catch regressions",
+      "type": "Stop",
+      "command": "flutter test",
+      "enabled": false,
+      "note": "Enable this to auto-run tests at the end of every Claude session"
+    }
+  ]
+}

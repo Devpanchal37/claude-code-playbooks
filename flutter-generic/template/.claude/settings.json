@@ -1,0 +1,81 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//YOUR_PROJECT_ROOT/**)",
+      "Read(//YOUR_PROJECT_ROOT/docs/**)",
+      "Read(//YOUR_HOME/.claude/**)",
+      "Bash(flutter analyze:*)",
+      "Bash(flutter test:*)",
+      "Bash(flutter clean:*)",
+      "Bash(flutter pub:*)",
+      "Bash(dart fix:*)",
+      "Bash(dart format:*)",
+      "Bash(gh api:*)",
+      "Bash(gh search:*)",
+      "Bash(claude --version)",
+      "Bash(claude mcp:*)",
+      "Bash(find YOUR_PROJECT_ROOT/lib/src -name *route* -type f)",
+      "Bash(ls -la \"YOUR_PROJECT_ROOT\\.claude\" 2>/dev/null || echo \"No project .claude folder\")",
+      "Bash(grep -E \"^\\\\s+\\(Expected|Actual|Which|test\\\\\\\\\\)\")",
+      "Bash(xargs grep:*)",
+      "Bash(powershell -Command \":*)",
+      "Bash(python -c \":*)",
+      "Bash(python3 -c \":*)",
+      "Bash(node -e \":*)",
+      "Bash(node:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:www.figma.com)",
+      "WebSearch",
+      "mcp__figma__get_design_context",
+      "mcp__figma__whoami",
+      "mcp__figma__get_figma_data",
+      "mcp__plugin_claude-mem_mcp-search__search",
+      "mcp__plugin_claude-mem_mcp-search__get_observations"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\YOUR_USERNAME\\.claude\\projects\\YOUR_PROJECT_KEY",
+      "C:\\Users\\YOUR_USERNAME\\.claude\\sessions",
+      "C:\\Users\\YOUR_USERNAME\\.claude\\agents",
+      "C:\\Users\\YOUR_USERNAME\\.claude\\rules\\common"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c 'import sys,json; d=json.load(sys.stdin); f=d.get(\"tool_input\",{}).get(\"file_path\",\"\"); print(json.dumps({\"systemMessage\":\"WARNING: Main Claude should not directly edit Dart/pubspec files. Use the developer agent instead.\"})) if (f.endswith(\".dart\") or f.endswith(\"pubspec.yaml\") or f.endswith(\"pubspec.lock\")) else None' 2>/dev/null || true",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "code-review-graph update --quiet",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "code-review-graph status --json",
+            "timeout": 3000
+          }
+        ]
+      }
+    ]
+  }
+}
